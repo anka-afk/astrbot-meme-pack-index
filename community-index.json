@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-07-08T00:00:00Z",
+  "maintainer": "anka-afk",
+  "repository": "anka-afk/astrbot-meme-pack-index",
+  "packs": [
+    {
+      "id": "official-001",
+      "name": "官方表情包1号",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "AstrBot 官方默认表情包，适合作为初始安装包。",
+      "license": "CC-BY-NC-SA-4.0",
+      "verified": true,
+      "tags": ["official", "default", "starter"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/astrbot-meme-pack-official-01/main/previews/cover.png"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/astrbot-meme-pack-official-01",
+        "ref": "main",
+        "subpath": "."
+      }
+    }
+  ]
+}
