@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-07-08T00:00:00Z",
+  "generated_at": "2026-07-22T22:50:36Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -20,6 +20,25 @@
         "type": "github",
         "repo": "anka-afk/astrbot-meme-pack-official-01",
         "ref": "main",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "ddzs987-semantic-001",
+      "name": "官方表情包1号 · 社区语义增强版",
+      "version": "1.0.0",
+      "maintainer": "DDZS987",
+      "description": "基于官方表情包1号制作的社区语义增强版，包含 398 张图片和 396 条去重语义描述，不分发本机向量；安装后可按当前向量模型重建。",
+      "license": "CC-BY-NC-SA-4.0",
+      "verified": false,
+      "tags": ["community", "semantic", "v2", "starter"],
+      "previews": [
+        "https://raw.githubusercontent.com/DDZS987/astrbot-meme-pack-semantic-01/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "DDZS987/astrbot-meme-pack-semantic-01",
+        "ref": "v1.0.0",
         "subpath": "."
       }
     }
