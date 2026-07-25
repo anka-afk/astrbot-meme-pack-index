@@ -3,7 +3,7 @@
 ## 1. Status
 
 - Document status: draft
-- Protocol version: 0.1.0
+- Protocol version: 0.2
 - Schema version: 1
 - Target plugin: astrbot_plugin_meme_manager
 
@@ -566,20 +566,7 @@ An installable pack MUST fail validation if any of the following are true:
 8. The archive contains path traversal content.
 9. The pack contains unsupported dangerous files.
 
-## 20. Pending Implementation Notes
-
-This protocol draft fixes the target behavior, but the existing codebase still uses a single global meme directory and a single global description file.
-
-Implementation work is expected to proceed in phases:
-
-1. Introduce pack storage and migration.
-2. Switch prompt building to active-pack categories.
-3. Add official download catalog.
-4. Add backup export and restore.
-5. Add reviewed community catalog.
-6. Add ordered selection rules in the settings page.
-
-## 21. Summary
+## 20. Summary
 
 This draft defines one unified model:
 
