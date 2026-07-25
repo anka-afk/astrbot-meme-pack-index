@@ -120,5 +120,5 @@ AstrBot Meme Manager 表情包广场索引仓库。
 
 ## 协议与 Schema
 
-- 协议文档参考：[英文](ASTRBOT_MEME_PACK_PROTOCOL.md)/[中文](ASTRBOT_MEME_PACK_PROTOCOL_CN.md)。
+- 协议文档参考：[英文](ASTRBOT_MEME_PACK_PROTOCOL.md)/[中文](ASTRBOT_MEME_PACK_PROTOCOL_ZH.md)。
 - Schema 参考：`schemas` 目录下的文件。
