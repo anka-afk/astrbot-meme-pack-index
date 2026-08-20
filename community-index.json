@@ -60,6 +60,25 @@
         "ref": "v2026.08.2",
         "subpath": "."
       }
+    },
+    {
+      "id": "yctf-taffy",
+      "name": "永雏塔菲表情包",
+      "version": "1.0.0",
+      "maintainer": "flybode",
+      "description": "永雏塔菲（含小菲）表情包合集：收录 B 站官方/粉丝整理的 2D 与 3D 动图，覆盖 19 个常见情绪与动作类别，适合在聊天、评论、直播互动中使用。",
+      "license": "CC-BY-NC-SA-4.0",
+      "verified": false,
+      "tags": ["永雏塔菲", "taffy", "小菲", "vtuber", "anime", "bilibili", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/flybode/yctf-taffy-meme-pack/main/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "flybode/yctf-taffy-meme-pack",
+        "ref": "main",
+        "subpath": "."
+      }
     }
   ]
 }
