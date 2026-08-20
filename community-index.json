@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T04:14:53Z",
+  "generated_at": "2026-08-20T04:19:07Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -44,20 +44,20 @@
     },
     {
       "id": "seio-stickers",
-      "name": "seio-stickers",
-      "version": "2026.08.1",
+      "name": "AstrBot娘表情包",
+      "version": "2026.08.2",
       "maintainer": "anka-afk",
-      "description": "包含 188 个 seio娘动态 GIF 的 Meme Manager 表情包，按 15 个聊天语义类别整理，使用适合聊天平台的 240×240 优化资源。",
+      "description": "收录 188 个 AstrBot娘动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
       "license": "仅限非商业使用；允许下载、分享与分发",
       "verified": true,
       "tags": ["official", "seio", "animated", "gif", "non-commercial"],
       "previews": [
-        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.08.1/previews/cover.jpg"
+        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.08.2/previews/cover.jpg"
       ],
       "source": {
         "type": "github",
         "repo": "anka-afk/seio-stickers",
-        "ref": "v2026.08.1",
+        "ref": "v2026.08.2",
         "subpath": "."
       }
     }
