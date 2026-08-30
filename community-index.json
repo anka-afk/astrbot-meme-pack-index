@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-30T12:18:35Z",
+  "generated_at": "2026-08-30T16:36:28Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -57,6 +57,25 @@
       "source": {
         "type": "github",
         "repo": "anka-afk/congyu-meme-pack",
+        "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "juxueli-meme-pack",
+      "name": "橘雪莉表情包",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 38 张橘雪莉静态表情，按 10 个聊天语义类别整理，适合日常回复、夸赞、疑问、道歉与轻松互动。",
+      "license": "仅限非商业使用；素材版权归原作者",
+      "verified": true,
+      "tags": ["official", "juxueli", "anime", "static", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/juxueli-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/juxueli-meme-pack",
         "ref": "v1.0.0",
         "subpath": "."
       }
