@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-20T04:19:07Z",
+  "generated_at": "2026-08-30T11:32:31Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -20,6 +20,25 @@
         "type": "github",
         "repo": "anka-afk/astrbot-meme-pack-official-01",
         "ref": "main",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "atri-meme-pack",
+      "name": "ATRI 表情包",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 551 张 ATRI 静态与动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
+      "license": "仅限非商业使用；素材版权归原作者",
+      "verified": true,
+      "tags": ["community", "atri", "anime", "animated", "non-commercial"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/atri-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/atri-meme-pack",
+        "ref": "v1.0.0",
         "subpath": "."
       }
     },
