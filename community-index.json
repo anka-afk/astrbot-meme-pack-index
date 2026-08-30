@@ -136,6 +136,25 @@
         "ref": "main",
         "subpath": "."
       }
+    },
+    {
+      "id": "kipfel",
+      "name": "Kipfel 表情包",
+      "version": "1.0.0",
+      "maintainer": "momo-OwO-qwq",
+      "description": "Kipfel 猫猫表情包合集，共收录 288 张静态与动态表情，按文件名语义整理为 9 类，适合日常闲聊、卖萌互动与情绪表达。",
+      "license": "仅限非商业使用；素材版权归原作者",
+      "verified": false,
+      "tags": ["kipfel","cat","moe", "anime","meme-pack","gif"],
+      "previews": [
+        "https://raw.githubusercontent.com/momo-OwO-qwq/astrbot-meme-pack-index/main/packs/kipfel/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "momo-OwO-qwq/astrbot-meme-pack-index",
+        "ref": "main",
+        "subpath": "packs/kipfel"
+      }
     }
   ]
 }
