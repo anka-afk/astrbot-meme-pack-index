@@ -147,13 +147,13 @@
       "verified": false,
       "tags": ["kipfel","cat","moe", "anime","meme-pack","gif"],
       "previews": [
-        "https://raw.githubusercontent.com/momo-OwO-qwq/astrbot-meme-pack-index/main/packs/kipfel/previews/cover.jpg"
+        "https://raw.githubusercontent.com/momo-OwO-qwq/astrbot-meme-pack-kipfel/main/previews/cover.jpg"
       ],
       "source": {
         "type": "github",
-        "repo": "momo-OwO-qwq/astrbot-meme-pack-index",
+        "repo": "momo-OwO-qwq/astrbot-meme-pack-kipfel",
         "ref": "main",
-        "subpath": "packs/kipfel"
+        "subpath": "."
       }
     }
   ]
