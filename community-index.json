@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-04T07:36:57Z",
+  "generated_at": "2026-09-04T12:54:17Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -95,6 +95,25 @@
       "source": {
         "type": "github",
         "repo": "anka-afk/laffey2-meme-pack",
+        "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "clover-days-meme-pack",
+      "name": "Clover Days 表情包 · 鹰仓杏铃",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 78 张静态表情，以鹰仓杏铃为主，按 12 个聊天语义类别整理。",
+      "license": "原素材许可未指定；版权归各权利人，详见 LICENSE",
+      "verified": true,
+      "tags": ["official", "clover-days", "鹰仓杏铃", "anime", "static", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/clover-days-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/clover-days-meme-pack",
         "ref": "v1.0.0",
         "subpath": "."
       }
