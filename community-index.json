@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-08-30T16:36:28Z",
+  "generated_at": "2026-09-04T07:36:57Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -76,6 +76,25 @@
       "source": {
         "type": "github",
         "repo": "anka-afk/juxueli-meme-pack",
+        "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "laffey2-meme-pack",
+      "name": "拉菲2表情包",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 148 个拉菲2动态表情，按 16 个聊天语义类别整理。素材制作：Z-wumi；来源：哔哩哔哩《进来看我做的兔兔表情包》（https://b23.tv/hNxBp02）。",
+      "license": "经授权发布；素材版权归原权利人，详见仓库 LICENSE",
+      "verified": true,
+      "tags": ["official", "laffey", "laffey2", "anime", "animated", "gif", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/laffey2-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/laffey2-meme-pack",
         "ref": "v1.0.0",
         "subpath": "."
       }
