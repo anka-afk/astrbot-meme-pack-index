@@ -4,7 +4,13 @@
   "title": "ASTRBOT Meme Pack Manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "name", "version", "categories"],
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "version",
+    "categories"
+  ],
   "properties": {
     "schema_version": {
       "type": "integer",
@@ -89,6 +95,29 @@
       "additionalProperties": {
         "$ref": "#/$defs/categoryDefinition"
       }
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Optional capabilities. Omission leaves a complete category-based pack.",
+      "additionalProperties": true,
+      "properties": {
+        "semantic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "file"
+          ],
+          "properties": {
+            "version": {
+              "const": 1
+            },
+            "file": {
+              "const": "semantic_metadata.json"
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {
@@ -101,11 +130,18 @@
     "sourceDescriptor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["type", "repo", "ref", "subpath"],
+      "required": [
+        "type",
+        "repo",
+        "ref",
+        "subpath"
+      ],
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["github"]
+          "enum": [
+            "github"
+          ]
         },
         "repo": {
           "type": "string",
@@ -131,7 +167,9 @@
     "categoryDefinition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["description"],
+      "required": [
+        "description"
+      ],
       "properties": {
         "description": {
           "type": "string",

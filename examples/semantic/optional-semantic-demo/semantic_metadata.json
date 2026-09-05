@@ -1,0 +1,18 @@
+{
+  "schema_version": "2.0",
+  "pack_id": "optional-semantic-demo",
+  "images": {
+    "55595edf7fe8e1f84268b9b742f6ab8ee4c41d0eded589492d55bde0f33fa9f9": {
+      "entry_id": "55595edf7fe8e1f84268b9b742f6ab8ee4c41d0eded589492d55bde0f33fa9f9",
+      "content_sha256": "c054eec0ca71070d8406b12c9e0b1745c861d337f4818c5fe8334e1b4c0dc425",
+      "relative_path": "memes/happy/sample.png",
+      "category": "happy",
+      "caption": "A placeholder image used to validate the semantic pack protocol.",
+      "caption_status": "done",
+      "tags": [
+        "protocol-example"
+      ],
+      "visible_text": ""
+    }
+  }
+}

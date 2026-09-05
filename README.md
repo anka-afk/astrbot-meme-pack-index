@@ -82,6 +82,14 @@ AstrBot Meme Manager 表情包广场索引仓库。
 
 确保你的仓库中 manifest.json 文件处于仓库根目录，目录层级可以参考[示例仓库](https://github.com/anka-afk/astrbot-meme-pack-example)。
 
+## 可选：为图片添加语义描述
+
+**可以添加，也可以不添加。** 不带语义描述的表情包同样可以安装、分享并提交社区索引，无需为了投稿调用模型或购买语义化服务。
+
+如果已有图片描述，可在包根目录附带 `semantic_metadata.json`，也可以只描述部分图片。推荐通过插件的“分享导出”生成文件，避免携带本机向量和运行状态；可在 manifest 的 `extensions.semantic` 中声明此能力。
+
+字段、版本与可选声明见 [中文协议第 7.5 节](ASTRBOT_MEME_PACK_PROTOCOL_ZH.md#75-可选语义描述扩展) / [English](ASTRBOT_MEME_PACK_PROTOCOL.md#75-optional-semantic-description-extension)，完整样例见 [语义扩展示例](examples/semantic/README.md)。
+
 ## 提交社区表情包
 
 如果你需要提交表情包，请使用以下任一方式：

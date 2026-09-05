@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "optional-semantic-demo",
+  "name": "Optional semantic extension demo",
+  "version": "1.0.0",
+  "categories": {
+    "happy": {
+      "description": "Positive confirmations and celebrations"
+    }
+  },
+  "extensions": {
+    "semantic": {
+      "version": 1,
+      "file": "semantic_metadata.json"
+    }
+  }
+}

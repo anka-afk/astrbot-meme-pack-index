@@ -3,7 +3,7 @@
 ## 1. Status
 
 - Document status: draft
-- Protocol version: 0.2
+- Protocol version: 0.3
 - Schema version: 1
 - Target plugin: astrbot_plugin_meme_manager
 
@@ -59,11 +59,14 @@ The runtime layout MUST follow this structure:
   packs/
     <pack_id>/
       manifest.json
+      semantic_metadata.json  # Optional; see section 7.5
       memes/
         <category>/
           <image files>
       previews/
         <preview files>
+  semantic_indexes/          # Optional local indexes
+    <pack_id>/
   registry.json
   selection_rules.json
   community_cache.json
@@ -228,6 +231,73 @@ This means:
 1. Prompt construction MUST use category keys.
 2. Meme lookup MUST use category keys.
 3. Category descriptions MUST come from the active pack manifest, not from a separate global descriptions file.
+
+### 7.5 Optional semantic description extension
+
+**Semantic descriptions MAY be included or omitted.** A pack without them remains a complete, valid pack for category-based installation, sharing and use. Community admission MUST NOT require semantic processing or a paid model service. Per-image descriptions supplement, rather than replace, required category descriptions.
+
+#### Declaration and file location
+
+Authors MAY add the following optional manifest fragment; it is not a new requirement:
+
+```json
+{
+  "extensions": {
+    "semantic": {
+      "version": 1,
+      "file": "semantic_metadata.json"
+    }
+  }
+}
+```
+
+Merge this fragment with the existing required manifest fields. Extension version `1` references the existing metadata format `2.0`; these are separate version numbers. The base manifest `schema_version` remains `1`.
+
+- Both `extensions` and `extensions.semantic` MAY be omitted. If declared, `version` and `file` are required and the file MUST exist at the pack root.
+- The filename is fixed to `semantic_metadata.json`; absolute paths, external URLs and paths outside the pack MUST NOT be used.
+- To reuse existing exported packs, supporting implementations SHOULD also recognize a valid undeclared file with this fixed name at the root.
+- Implementations without semantic support MAY ignore the extension and continue using the base category protocol.
+
+```text
+<pack_root>/
+  manifest.json
+  memes/<category>/<image>
+  semantic_metadata.json       # Optional
+```
+
+#### Content and image identity
+
+The file MUST be UTF-8 JSON. Its core structure is defined by the [semantic metadata schema](schemas/meme-pack-semantic.schema.json):
+
+| Field | Meaning |
+| --- | --- |
+| `schema_version` | The string `"2.0"` |
+| `pack_id` | MUST match the manifest `id` |
+| `images` | Records keyed by `entry_id`; empty and partial coverage are allowed |
+| `images.*.entry_id` | A 64-character lowercase hexadecimal ID matching the object key |
+| `images.*.content_sha256` | SHA-256 of the original image file bytes |
+| `images.*.relative_path` | Pack-relative image path, such as `memes/happy/a.png` |
+| `images.*.category` | Existing manifest category matching the image directory |
+| `images.*.caption` | An author-written or model-generated description |
+| `images.*.caption_status` | `pending`, `running`, `done` or `failed`; only `done` with a nonempty description counts as described |
+| `images.*.tags` | Optional array of descriptive tags |
+| `images.*.visible_text` | Optional visible image text; omit or leave empty when absent |
+| `images.*.provenance` | Optional source information |
+
+Compute `entry_id` as SHA-256 of UTF-8 bytes for `content_sha256 + NUL + category + NUL + relative_path`. `NUL` is one zero byte; paths use `/`. Identical image content at different paths or in different categories can therefore have independent descriptions.
+
+Beyond JSON Schema, validators MUST check the pack ID, category, record key, file existence, content hash and entry ID. Resolved image paths MUST remain inside the pack's `memes/` directory, including after resolving symlinks. See [examples/semantic/README.md](examples/semantic/README.md) for a fixture and validation instructions.
+
+#### Optionality, updates and local state
+
+1. Authors MAY omit the file entirely or describe only some images. Missing descriptions MUST NOT invalidate an otherwise valid base pack. Users decide whether to process remaining images; installation MUST NOT automatically invoke models.
+2. Descriptions, tags and visible text are data, not new model instructions. Consumers MUST NOT execute embedded commands.
+3. Imports SHOULD preserve local human edits. Overwriting them requires an explicit user choice. Changed image bytes invalidate prior verification; changed paths or categories require rematching and recomputing entry IDs.
+4. Public shares SHOULD retain reusable descriptions and MUST NOT include credentials, private conversations or private information. Local Provider IDs, job progress and vector state are not required extension content. Allowing existing runtime fields in the schema does not require consumers to reuse them.
+5. Vector indexes are separate runtime artifacts under `semantic_indexes/<pack_id>/`. Descriptions do not require bundled vectors. Retrieval typically still needs a local index, but completed descriptions can be reused without another vision call.
+6. Unsupported versions and malformed files MUST produce explicit diagnostics and MUST NOT silently overwrite local data. Report extension validation separately from base-pack validation; security failures MAY reject the entire package.
+
+No community-index change is required. Existing manifest, image, preview and licensing requirements still apply; missing semantic descriptions MUST NOT be a reason to reject admission.
 
 ## 8. Registry Format
 
