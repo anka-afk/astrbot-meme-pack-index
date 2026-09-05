@@ -3,7 +3,7 @@
 ## 1. 状态
 
 - 文档状态：草案
-- 协议版本：0.2
+- 协议版本：0.3
 - 模式版本：1
 - 目标插件：astrbot_plugin_meme_manager
 
@@ -59,11 +59,14 @@
   packs/
     <pack_id>/
       manifest.json
+      semantic_metadata.json  # Optional; see section 7.5
       memes/
         <category>/
           <image files>
       previews/
         <preview files>
+  semantic_indexes/          # Optional local indexes
+    <pack_id>/
   registry.json
   selection_rules.json
   community_cache.json
@@ -228,6 +231,73 @@ manifest.json
 1. 提示词构建必须使用类别键。
 2. 表情查找必须使用类别键。
 3. 类别描述必须来自当前活动包的清单，而非来自某个单独的全局描述文件。
+
+### 7.5 可选语义描述扩展
+
+**语义描述可添加，也可不添加。** 不带语义描述的包仍是完整、有效的表情包，可以按分类安装、分享与使用；社区收录不得要求作者先进行语义化或购买模型服务。图片描述是每张图片的可选补充，不替代必需的分类描述。
+
+#### 声明与文件位置
+
+作者可以在 `manifest.json` 中添加以下可选字段；这不是新的必填项：
+
+```json
+{
+  "extensions": {
+    "semantic": {
+      "version": 1,
+      "file": "semantic_metadata.json"
+    }
+  }
+}
+```
+
+这段 JSON 是清单片段，须与原有必填字段合并。扩展版本 `1` 引用现有语义元数据格式 `2.0`，二者不是同一版本号。基础清单的 `schema_version` 仍为 `1`。
+
+- `extensions` 和 `extensions.semantic` 均可省略。添加声明时，`version` 与 `file` 必须齐全，文件必须位于包根目录。
+- 固定文件名为 `semantic_metadata.json`，不得使用绝对路径、外部 URL 或越过包目录的路径。
+- 为复用已有导出包，支持此扩展的实现也应当识别根目录内未声明但有效的同名文件。
+- 不支持语义扩展的实现可以忽略该扩展，继续按基础分类协议使用表情包。
+
+```text
+<pack_root>/
+  manifest.json
+  memes/<category>/<image>
+  semantic_metadata.json       # Optional
+```
+
+#### 内容与图片对应关系
+
+语义文件必须使用 UTF-8 JSON，核心结构由 [语义元数据 Schema](schemas/meme-pack-semantic.schema.json) 定义：
+
+| 字段 | 含义 |
+| --- | --- |
+| `schema_version` | 固定为字符串 `"2.0"` |
+| `pack_id` | 必须与包清单的 `id` 一致 |
+| `images` | 以 `entry_id` 为键的图片记录对象，允许为空或只覆盖部分图片 |
+| `images.*.entry_id` | 与对象键相同的 64 位小写十六进制 ID |
+| `images.*.content_sha256` | 图片原始文件字节的 SHA-256 |
+| `images.*.relative_path` | 相对包根目录的图片路径，例如 `memes/happy/a.png` |
+| `images.*.category` | 清单中已有的分类键，必须与路径的分类目录一致 |
+| `images.*.caption` | 图片描述，可人工编写，也可由模型生成 |
+| `images.*.caption_status` | `pending`、`running`、`done` 或 `failed`；只有 `done` 且描述非空的记录可视为已有描述 |
+| `images.*.tags` | 可选的描述标签数组 |
+| `images.*.visible_text` | 可选的图片可见文字；没有则留空或省略 |
+| `images.*.provenance` | 可选的来源说明 |
+
+`entry_id` 按以下方式计算：先计算图片文件的 `content_sha256`，再对 UTF-8 字节串 `content_sha256 + NUL + category + NUL + relative_path` 计算 SHA-256。`NUL` 指一个零字节；相对路径使用 `/`。这样同一图片在不同分类或路径下可以拥有独立描述。
+
+校验器除检查 JSON Schema 外，还必须核对包 ID、分类、记录键、文件存在性、内容哈希和 entry ID；图片路径解析后必须仍位于包的 `memes/` 内，不得通过符号链接逃逸。示例与校验方法见 [examples/semantic/README.md](examples/semantic/README.md)。
+
+#### 可选性、更新与运行状态
+
+1. 作者可以完全不添加文件，也可以只描述部分图片；缺少描述不得使原本有效的基础包失效。是否处理剩余图片由用户决定，不得因安装自动产生模型调用。
+2. 描述、标签和图片文字是数据，不是给模型的新指令。消费方不得执行其中的命令。
+3. 导入时应当保留已有本地人工修改；覆盖人工内容需要用户明确选择。图片字节变化后不得继续将原描述视为已验证；路径或分类变化后需要重新匹配并计算 entry ID。
+4. 公开分享应当保留可复用描述，不得携带密钥、用户会话或私密信息；本机 Provider ID、任务进度和向量状态不属于扩展的必需内容。Schema 允许现有运行时附加字段，不代表消费方必须复用它们。
+5. 向量索引是独立的运行时产物，位于 `semantic_indexes/<pack_id>/`。添加语义描述不要求附带向量；需要向量检索时通常仍须建立本机索引，但可复用已完成的描述而不重复识图。
+6. 未知版本或损坏文件必须明确报告，不能静默覆盖本地数据。扩展校验失败与基础包校验失败应当分别说明；安全性错误可以导致整包拒绝。
+
+该扩展不要求修改社区索引条目。可下载的包仍按原有 manifest、图片、预览及许可要求审核，不能因为没有语义描述而拒绝收录。
 
 ## 8. 注册表格式
 

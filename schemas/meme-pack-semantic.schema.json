@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astrbot.local/schemas/meme-pack-semantic.schema.json",
+  "title": "Optional Meme Pack Semantic Metadata",
+  "description": "Core fields of the existing 2.0 metadata format. Runtime-only additional fields are not portable guarantees.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "pack_id",
+    "images"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "pack_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+    },
+    "images": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/image"
+      }
+    }
+  },
+  "$defs": {
+    "image": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "entry_id",
+        "content_sha256",
+        "relative_path",
+        "category",
+        "caption",
+        "caption_status"
+      ],
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "relative_path": {
+          "type": "string",
+          "pattern": "^memes/(?!\\.{1,2}/)[^/\\\\:]+/(?!\\.{1,2}$)[^/\\\\:]+$"
+        },
+        "category": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "caption_status": {
+          "enum": [
+            "pending",
+            "running",
+            "done",
+            "failed"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "visible_text": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "caption_status": {
+                "const": "done"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "caption": {
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
