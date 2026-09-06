@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-04T12:54:17Z",
+  "generated_at": "2026-09-06T11:03:50Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -114,6 +114,25 @@
       "source": {
         "type": "github",
         "repo": "anka-afk/clover-days-meme-pack",
+        "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "blue-fat-fish-meme-pack",
+      "name": "蓝色大肥鱼表情包",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 157 个蓝色大肥鱼动态表情，按 15 个聊天语义类别整理，适合日常回复、情绪表达与互动。",
+      "license": "原素材许可未指定；版权归各权利人，详见 LICENSE",
+      "verified": true,
+      "tags": ["official", "blue-fat-fish", "animated", "gif", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/blue-fat-fish-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/blue-fat-fish-meme-pack",
         "ref": "v1.0.0",
         "subpath": "."
       }
