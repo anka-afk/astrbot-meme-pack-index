@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-06T11:03:50Z",
+  "generated_at": "2026-09-06T11:06:24Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -20,6 +20,25 @@
         "type": "github",
         "repo": "anka-afk/astrbot-meme-pack-official-01",
         "ref": "main",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "seio-stickers",
+      "name": "AstrBot娘表情包",
+      "version": "2026.08.2",
+      "maintainer": "anka-afk",
+      "description": "收录 188 个 AstrBot娘动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
+      "license": "仅限非商业使用；允许下载、分享与分发",
+      "verified": true,
+      "tags": ["official", "seio", "animated", "gif", "non-commercial"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.08.2/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/seio-stickers",
+        "ref": "v2026.08.2",
         "subpath": "."
       }
     },
@@ -153,25 +172,6 @@
         "type": "github",
         "repo": "DDZS987/astrbot-meme-pack-semantic-01",
         "ref": "v1.1.0",
-        "subpath": "."
-      }
-    },
-    {
-      "id": "seio-stickers",
-      "name": "AstrBot娘表情包",
-      "version": "2026.08.2",
-      "maintainer": "anka-afk",
-      "description": "收录 188 个 AstrBot娘动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
-      "license": "仅限非商业使用；允许下载、分享与分发",
-      "verified": true,
-      "tags": ["official", "seio", "animated", "gif", "non-commercial"],
-      "previews": [
-        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.08.2/previews/cover.jpg"
-      ],
-      "source": {
-        "type": "github",
-        "repo": "anka-afk/seio-stickers",
-        "ref": "v2026.08.2",
         "subpath": "."
       }
     },
