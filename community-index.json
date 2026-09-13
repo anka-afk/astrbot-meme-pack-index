@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-06T11:06:24Z",
+  "generated_at": "2026-09-13T03:02:24Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -197,9 +197,9 @@
     {
       "id": "kipfel",
       "name": "Kipfel 表情包",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "maintainer": "momo-OwO-qwq",
-      "description": "Kipfel 猫猫表情包合集，共收录 288 张静态与动态表情，按文件名语义整理为 10 类，适合日常闲聊、卖萌互动与情绪表达。",
+      "description": "Kipfel 猫猫表情包合集，按聊天语义分类整理，适合日常闲聊、卖萌互动与情绪表达。",
       "license": "仅限非商业使用；素材版权归原作者",
       "verified": false,
       "tags": ["kipfel", "cat", "moe", "anime", "meme-pack", "gif"],
