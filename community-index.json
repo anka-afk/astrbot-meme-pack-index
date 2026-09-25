@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-13T03:02:24Z",
+  "generated_at": "2026-09-25T05:23:41Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -152,6 +152,25 @@
       "source": {
         "type": "github",
         "repo": "anka-afk/blue-fat-fish-meme-pack",
+        "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "deepseek-fanart-meme-pack",
+      "name": "DeepSeek 二创表情包",
+      "version": "1.0.0",
+      "maintainer": "anka-afk",
+      "description": "收录 174 张 DeepSeek 二创图片，包含插画、聊天梗图、拟人角色和少量动画，按 13 个聊天语义类别整理。",
+      "license": "原素材许可未指定；版权归各权利人，详见 LICENSE",
+      "verified": true,
+      "tags": ["official", "deepseek", "fanart", "anime", "mixed-style", "meme-pack"],
+      "previews": [
+        "https://raw.githubusercontent.com/anka-afk/deepseek-fanart-meme-pack/v1.0.0/previews/cover.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "anka-afk/deepseek-fanart-meme-pack",
         "ref": "v1.0.0",
         "subpath": "."
       }
