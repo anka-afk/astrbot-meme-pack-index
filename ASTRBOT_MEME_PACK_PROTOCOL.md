@@ -1,247 +1,145 @@
-# ASTRBOT Meme Pack Protocol Draft
+# AstrBot Meme Pack Specification
 
-## 1. Status
+[中文版](ASTRBOT_MEME_PACK_PROTOCOL_ZH.md)
 
-- Document status: draft
-- Protocol version: 0.3
-- Schema version: 1
-- Target plugin: astrbot_plugin_meme_manager
+- Document revision: 0.3
+- Manifest schema version: `1`
+- Optional semantic extension version: `1`
+- Semantic metadata schema version: `"2.0"`
 
-This document defines the runtime data layout, pack format, community indexing rules, backup format, selection rules, and migration requirements for the meme manager plugin.
+## 1. Scope
 
-## 2. Goals
+This specification defines the portable contents of an AstrBot meme pack: its directory structure, manifest, category assets, previews, and optional semantic descriptions. It applies equally to official, community, and privately distributed packs.
 
-This protocol exists to solve the following problems:
+It does not define application storage locations, installed-pack registries, persona or session selection, prompts, retrieval algorithms, model calls, WebUI layouts, download or installation procedures, backup management, or migration behavior. Community indexing and admission are repository policies documented in the [README](README.md#社区索引格式与收录要求), not conditions for pack-format conformance.
 
-1. Default memes must be detachable from the plugin repository.
-2. Official and community meme packs must share one install format.
-3. Backup export and import restore must share one transport format.
-4. Runtime data must survive plugin updates.
-5. Multi-pack selection must support persona, session, and default rules.
-6. Old single-directory users must be migrated without manual intervention.
+Revision 0.3 replaces the implementation-oriented scope of revision 0.2. It does not change the existing JSON schemas or their version numbers. A pack's identity comes from its manifest, independently of its containing directory name.
 
-## 3. Normative Language
+## 2. Terminology and requirements
 
-The key words MUST, MUST NOT, SHOULD, SHOULD NOT, and MAY in this document are to be interpreted as normative requirements.
+- **Pack root**: the directory containing `manifest.json` and `memes/`.
+- **Manifest**: the UTF-8 JSON object describing the pack in `manifest.json`.
+- **Category**: a named group of images with a description in the manifest.
+- **Base pack**: the manifest and category assets, without requiring any extension.
+- **Semantic extension**: optional per-image descriptions associated with specific image files.
 
-## 4. Storage Rules
+**MUST** and **MUST NOT** express mandatory requirements. **SHOULD** and **SHOULD NOT** express recommendations that may be departed from for a justified reason. **MAY** expresses an option. Examples are informative; field constraints and conformance requirements are normative.
 
-### 4.1 Persistent data location
+The [manifest schema](schemas/meme-pack-manifest.schema.json) and [semantic metadata schema](schemas/meme-pack-semantic.schema.json) define JSON types, allowed properties, lengths, and patterns. The corresponding document MUST satisfy its schema. The file relationships and content checks specified below apply in addition to JSON Schema validation.
 
-All persistent runtime data MUST be stored in the AstrBot plugin data directory provided by AstrBot.
-
-The plugin MUST NOT persist runtime data inside the plugin source directory, because plugin updates can replace source files.
-
-The plugin SHOULD resolve the persistent root through AstrBot's plugin data path helper.
-
-### 4.2 Source directory usage
-
-The plugin source directory MAY contain:
-
-1. Static WebUI assets.
-2. Temporary migration helpers.
-3. Development-only sample data.
-
-The plugin source directory MUST NOT be treated as the long-term storage location for installed meme packs, backup archives, registry files, or user configuration.
-
-## 5. Runtime Data Layout
-
-The plugin runtime root is defined as:
-
-```text
-<astrbot_plugin_data>/meme_manager/
-```
-
-The runtime layout MUST follow this structure:
-
-```text
-<astrbot_plugin_data>/meme_manager/
-  packs/
-    <pack_id>/
-      manifest.json
-      semantic_metadata.json  # Optional; see section 7.5
-      memes/
-        <category>/
-          <image files>
-      previews/
-        <preview files>
-  semantic_indexes/          # Optional local indexes
-    <pack_id>/
-  registry.json
-  selection_rules.json
-  community_cache.json
-  backup/
-    <generated zip files>
-  migration/
-    <optional migration markers and logs>
-  temp/
-    <temporary download and extraction files>
-```
-
-### 5.1 Directory semantics
-
-- packs/: installed meme packs.
-- registry.json: installed pack metadata and enable state.
-- selection_rules.json: ordered persona and session binding rules plus the default rule.
-- community_cache.json: optional cached copy of the downloaded community index.
-- backup/: default export target for backup archives.
-- migration/: migration markers and rollback aids.
-- temp/: temporary files only.
-
-## 6. Pack Definition
-
-A meme pack is the smallest installable unit.
-
-Each installed pack MUST be stored under:
-
-```text
-packs/<pack_id>/
-```
-
-Each pack MUST include one manifest file:
-
-```text
-packs/<pack_id>/manifest.json
-```
-
-### 6.1 Required pack properties
-
-Each pack MUST have:
-
-1. A stable unique id.
-2. A human-readable name.
-3. A version string.
-4. Category descriptions.
-5. Meme assets stored by category.
-
-### 6.2 Pack directory structure
+## 3. Pack structure
 
 ```text
 <pack_root>/
   manifest.json
   memes/
-    angry/
-      a.png
-      b.gif
     happy/
-      c.webp
+      smile.png
+    sad/
+      tears.gif
   previews/
     cover.png
-    preview_1.png
+  semantic_metadata.json
 ```
 
-### 6.3 Supported asset files
+`manifest.json` and `memes/` MUST exist at the pack root. `previews/` and `semantic_metadata.json` are optional. The root directory MAY have any name and MAY be a repository root or a subdirectory; it need not match the manifest `id`.
 
-The pack implementation MUST support at least these image file types:
+Meme assets MUST be stored as `memes/<category>/<image>`. The category directory name MUST match the corresponding manifest category key exactly. This specification does not prescribe a fixed vocabulary of categories.
 
-- .png
-- .jpg
-- .jpeg
-- .gif
-- .webp
+A pack MAY include supporting documents such as a README, license, or attribution file. Such documents are not meme assets and do not replace manifest fields.
 
-Non-image executable or script files MUST be ignored or rejected.
+## 4. Manifest
 
-## 7. Manifest Format
+### 4.1 Required fields
 
-Each pack MUST provide a UTF-8 encoded JSON manifest.
+| Field | Type | Requirement |
+| --- | --- | --- |
+| `schema_version` | integer | MUST be `1` |
+| `id` | string | Stable pack identifier, 2–64 characters, matching `^[a-z0-9][a-z0-9._-]{1,63}$` |
+| `name` | string | Display name, 1–128 characters |
+| `version` | string | Pack release identifier, 1–64 characters; semantic versioning is RECOMMENDED |
+| `categories` | object | At least one category; each value MUST contain `description` |
 
-Recommended file name:
+A pack ID SHOULD remain unchanged across releases and SHOULD distinguish the pack from other published packs. The pack's `version` identifies its content release; it is independent of document, schema, and extension versions.
 
-```text
-manifest.json
-```
+Category keys MUST match `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`. Each category value MUST be an object containing a `description` string of 1–2000 characters. The description SHOULD explain the category's meaning or intended use. It does not prescribe how an application constructs prompts or chooses images.
 
-### 7.1 Required top-level fields
+### 4.2 Optional fields
+
+Optional fields MAY be omitted. When present, they MUST meet the following constraints and the manifest schema.
+
+| Field | Type | Meaning and constraints |
+| --- | --- | --- |
+| `description` | string | Pack description, 1–2000 characters; RECOMMENDED |
+| `author` | string | Author or attribution label, 1–128 characters |
+| `homepage` | string | Homepage URI, at most 2048 characters |
+| `license` | string | License identifier or reference to licensing information, 1–256 characters; RECOMMENDED |
+| `tags` | array of strings | At most 32 unique tags, each 1–64 characters |
+| `icon` | string | Pack-relative image path, 1–512 characters |
+| `previews` | array of strings | At most 32 unique pack-relative image paths, each 1–512 characters |
+| `source` | object | Source descriptor defined in section 4.3 |
+| `compat` | object | MAY contain `min_plugin_version`, a string of 1–64 characters describing the minimum compatible meme-manager plugin version |
+| `extensions` | object | Optional extension declarations; the semantic declaration is defined in section 6 |
+
+An icon and previews SHOULD be supplied for display purposes. Their absence does not invalidate a base pack. The manifest does not allow additional top-level properties; extension declarations belong under `extensions`, which permits additional extension names. Unknown extension names do not establish portable behavior under this specification.
+
+### 4.3 Source descriptor
+
+If `source` is present, all four fields below MUST be present. The descriptor identifies the pack's source; it does not require a particular download or installation workflow.
+
+| Field | Requirement |
+| --- | --- |
+| `type` | The string `"github"` |
+| `repo` | Repository in `owner/repo` form, matching `^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$`, at most 200 characters |
+| `ref` | Nonempty branch, tag, or commit reference, at most 200 characters |
+| `subpath` | Repository-relative pack root, 1–512 characters; use `"."` for the repository root |
+
+`subpath` MUST satisfy the schema's relative-directory-path constraints. It MUST NOT be an absolute path, contain backslashes or `..`, or resolve outside the repository.
+
+### 4.4 Minimal manifest example
 
 ```json
 {
   "schema_version": 1,
-  "id": "official-basic",
-  "name": "Official Basic Meme Pack",
+  "id": "example-pack",
+  "name": "Example Meme Pack",
   "version": "1.0.0",
-  "description": "Official maintained default meme pack",
   "categories": {
-    "angry": {
-      "description": "Use when the conversation contains complaints or strong disagreement"
-    },
     "happy": {
-      "description": "Use for positive confirmations and celebration scenes"
+      "description": "Express joy, positive feedback, or celebration."
     }
   }
 }
 ```
 
-### 7.2 Extended manifest example
+This example needs only `manifest.json` and category assets under `memes/happy/`. Neither preview fields nor semantic metadata are required.
+
+### 4.5 Extended manifest example
 
 ```json
 {
   "schema_version": 1,
-  "id": "official-basic",
-  "name": "Official Basic Meme Pack",
+  "id": "example-pack",
+  "name": "Example Meme Pack",
   "version": "1.0.0",
-  "description": "Official maintained default meme pack",
-  "author": "anka",
-  "homepage": "https://github.com/example/repo",
-  "license": "SEE LICENSE IN REPOSITORY",
-  "tags": ["official", "default"],
+  "description": "Images for everyday conversations.",
+  "author": "Example Author",
+  "homepage": "https://github.com/example/meme-pack",
+  "license": "SEE LICENSE IN LICENSE",
+  "tags": ["daily", "reaction"],
   "icon": "previews/cover.png",
-  "previews": ["previews/preview_1.png", "previews/preview_2.png"],
+  "previews": ["previews/cover.png"],
   "source": {
     "type": "github",
-    "repo": "owner/repo",
+    "repo": "example/meme-pack",
     "ref": "main",
-    "subpath": "packs/official-basic"
-  },
-  "compat": {
-    "min_plugin_version": "4.0.0"
+    "subpath": "."
   },
   "categories": {
-    "angry": {
-      "description": "Use when the conversation contains complaints or strong disagreement"
-    },
     "happy": {
-      "description": "Use for positive confirmations and celebration scenes"
+      "description": "Express joy, positive feedback, or celebration."
     }
-  }
-}
-```
-
-### 7.3 Manifest field requirements
-
-- schema_version: MUST be an integer.
-- id: MUST be unique across installed packs.
-- id: MUST match the installed directory name.
-- name: MUST be a user-facing display name.
-- version: MUST be present. Semantic versioning is RECOMMENDED.
-- description: SHOULD be present.
-- categories: MUST be present and MUST contain at least one category.
-- categories.<category>.description: MUST be present.
-- icon: SHOULD point to a preview asset when available.
-- previews: SHOULD include at least one preview image for catalog display.
-- source: SHOULD be present for official and community downloadable packs.
-- compat.min_plugin_version: SHOULD be present for downloadable packs.
-
-### 7.4 Category semantics
-
-The category key is the runtime emotion tag used by the plugin.
-
-This means:
-
-1. Prompt construction MUST use category keys.
-2. Meme lookup MUST use category keys.
-3. Category descriptions MUST come from the active pack manifest, not from a separate global descriptions file.
-
-### 7.5 Optional semantic description extension
-
-**Semantic descriptions MAY be included or omitted.** A pack without them remains a complete, valid pack for category-based installation, sharing and use. Community admission MUST NOT require semantic processing or a paid model service. Per-image descriptions supplement, rather than replace, required category descriptions.
-
-#### Declaration and file location
-
-Authors MAY add the following optional manifest fragment; it is not a new requirement:
-
-```json
-{
+  },
   "extensions": {
     "semantic": {
       "version": 1,
@@ -251,397 +149,88 @@ Authors MAY add the following optional manifest fragment; it is not a new requir
 }
 ```
 
-Merge this fragment with the existing required manifest fields. Extension version `1` references the existing metadata format `2.0`; these are separate version numbers. The base manifest `schema_version` remains `1`.
+The referenced preview and declared semantic metadata file MUST exist. The latter MUST satisfy section 6 for this pack's ID and image files.
 
-- Both `extensions` and `extensions.semantic` MAY be omitted. If declared, `version` and `file` are required and the file MUST exist at the pack root.
-- The filename is fixed to `semantic_metadata.json`; absolute paths, external URLs and paths outside the pack MUST NOT be used.
-- To reuse existing exported packs, supporting implementations SHOULD also recognize a valid undeclared file with this fixed name at the root.
-- Implementations without semantic support MAY ignore the extension and continue using the base category protocol.
+## 5. Image resources and paths
 
-```text
-<pack_root>/
-  manifest.json
-  memes/<category>/<image>
-  semantic_metadata.json       # Optional
-```
+The base image formats are PNG (`.png`), JPEG (`.jpg`, `.jpeg`), GIF (`.gif`), and WebP (`.webp`). These formats apply to meme assets and previews. Other image formats are outside the interoperability guarantees of this specification.
 
-#### Content and image identity
+Pack-relative asset paths MUST use `/` separators and refer to existing files within the pack root. They MUST NOT be absolute paths, external URLs, or paths that escape the pack root, including through symbolic links. Manifest `icon` and `previews` paths MUST also satisfy the schema, which disallows backslashes and any `..` substring. Semantic image paths have the more specific structure defined in section 6.
 
-The file MUST be UTF-8 JSON. Its core structure is defined by the [semantic metadata schema](schemas/meme-pack-semantic.schema.json):
+Previews SHOULD be placed in `previews/`. They illustrate the pack and do not constitute a category unless separately included as assets under `memes/` and declared in `categories`.
 
-| Field | Meaning |
+Executable files and scripts are not image resources and MUST NOT be treated as meme assets. A pack's descriptions and other metadata are data; they do not authorize command execution.
+
+## 6. Optional semantic descriptions
+
+<a id="75-optional-semantic-description-extension"></a>
+
+### 6.1 Optionality and declaration
+
+A base pack remains complete without semantic metadata. A semantic file MAY describe any subset of the pack's images, including none. Per-image descriptions supplement the required category descriptions.
+
+The optional `extensions.semantic` declaration MUST contain `version: 1` and `file: "semantic_metadata.json"`, with no additional properties. If declared, that file MUST exist at the pack root. A valid file with this fixed name MAY also be supplied without a declaration, for compatibility with existing exports.
+
+The file MUST be a UTF-8 JSON object conforming to the [semantic metadata schema](schemas/meme-pack-semantic.schema.json). Extension version `1`, metadata schema version `"2.0"`, and manifest schema version `1` are separate identifiers.
+
+### 6.2 Metadata fields
+
+| Field | Requirement |
 | --- | --- |
 | `schema_version` | The string `"2.0"` |
-| `pack_id` | MUST match the manifest `id` |
-| `images` | Records keyed by `entry_id`; empty and partial coverage are allowed |
-| `images.*.entry_id` | A 64-character lowercase hexadecimal ID matching the object key |
-| `images.*.content_sha256` | SHA-256 of the original image file bytes |
-| `images.*.relative_path` | Pack-relative image path, such as `memes/happy/a.png` |
-| `images.*.category` | Existing manifest category matching the image directory |
-| `images.*.caption` | An author-written or model-generated description |
-| `images.*.caption_status` | `pending`, `running`, `done` or `failed`; only `done` with a nonempty description counts as described |
-| `images.*.tags` | Optional array of descriptive tags |
-| `images.*.visible_text` | Optional visible image text; omit or leave empty when absent |
-| `images.*.provenance` | Optional source information |
+| `pack_id` | MUST equal the manifest `id` |
+| `images` | Object keyed by `entry_id`; empty and partial coverage are permitted |
+| `images.*.entry_id` | 64 lowercase hexadecimal characters; MUST equal the record key |
+| `images.*.content_sha256` | SHA-256 digest of the image's original file bytes, as 64 lowercase hexadecimal characters |
+| `images.*.relative_path` | Path of an existing image in the form `memes/<category>/<filename>`, with `/` separators and no extra directory level |
+| `images.*.category` | Existing manifest category key, matching the path's category component exactly |
+| `images.*.caption` | Description string; MAY be empty unless `caption_status` is `done` |
+| `images.*.caption_status` | One of `pending`, `running`, `done`, or `failed`; `done` requires a caption containing a non-whitespace character |
+| `images.*.tags` | Optional array of unique strings |
+| `images.*.visible_text` | Optional string containing text visible in the image |
+| `images.*.provenance` | Optional string describing the description's source |
 
-Compute `entry_id` as SHA-256 of UTF-8 bytes for `content_sha256 + NUL + category + NUL + relative_path`. `NUL` is one zero byte; paths use `/`. Identical image content at different paths or in different categories can therefore have independent descriptions.
+All fields above except `tags`, `visible_text`, and `provenance` are required. `caption_status` retains the existing format's values; it does not prescribe a processing workflow.
 
-Beyond JSON Schema, validators MUST check the pack ID, category, record key, file existence, content hash and entry ID. Resolved image paths MUST remain inside the pack's `memes/` directory, including after resolving symlinks. See [examples/semantic/README.md](examples/semantic/README.md) for a fixture and validation instructions.
+### 6.3 Image identity
 
-#### Optionality, updates and local state
-
-1. Authors MAY omit the file entirely or describe only some images. Missing descriptions MUST NOT invalidate an otherwise valid base pack. Users decide whether to process remaining images; installation MUST NOT automatically invoke models.
-2. Descriptions, tags and visible text are data, not new model instructions. Consumers MUST NOT execute embedded commands.
-3. Imports SHOULD preserve local human edits. Overwriting them requires an explicit user choice. Changed image bytes invalidate prior verification; changed paths or categories require rematching and recomputing entry IDs.
-4. Public shares SHOULD retain reusable descriptions and MUST NOT include credentials, private conversations or private information. Local Provider IDs, job progress and vector state are not required extension content. Allowing existing runtime fields in the schema does not require consumers to reuse them.
-5. Vector indexes are separate runtime artifacts under `semantic_indexes/<pack_id>/`. Descriptions do not require bundled vectors. Retrieval typically still needs a local index, but completed descriptions can be reused without another vision call.
-6. Unsupported versions and malformed files MUST produce explicit diagnostics and MUST NOT silently overwrite local data. Report extension validation separately from base-pack validation; security failures MAY reject the entire package.
-
-No community-index change is required. Existing manifest, image, preview and licensing requirements still apply; missing semantic descriptions MUST NOT be a reason to reject admission.
-
-## 8. Registry Format
-
-The installed pack registry MUST be stored in registry.json.
-
-Example:
-
-```json
-{
-  "schema_version": 1,
-  "installed_packs": [
-    {
-      "id": "official-basic",
-      "name": "Official Basic Meme Pack",
-      "version": "1.0.0",
-      "enabled": true,
-      "installed_at": "2026-07-08T00:00:00Z",
-      "source": {
-        "type": "github",
-        "repo": "owner/repo",
-        "ref": "main",
-        "subpath": "packs/official-basic"
-      }
-    }
-  ]
-}
-```
-
-### 8.1 Registry requirements
-
-- schema_version: MUST be present.
-- installed_packs: MUST be an array.
-- installed_packs[].id: MUST map to an existing packs/<pack_id> directory.
-- installed_packs[].enabled: MUST indicate whether the pack is selectable.
-- installed_packs[].version: MUST reflect the installed manifest version.
-
-## 9. Selection Rules Format
-
-The selection rule file MUST be stored in selection_rules.json.
-
-This file defines which pack is used for a persona, for a session, and as the default fallback.
-
-Example:
-
-```json
-{
-  "schema_version": 1,
-  "rules": [
-    {
-      "id": "persona-main",
-      "scope": "persona",
-      "target": "AssistantA",
-      "pack_id": "official-basic"
-    },
-    {
-      "id": "session-special",
-      "scope": "session",
-      "target": "session-123",
-      "pack_id": "community-fun"
-    },
-    {
-      "id": "default",
-      "scope": "default",
-      "pack_id": "official-basic"
-    }
-  ]
-}
-```
-
-### 9.1 Rule requirements
-
-- rules MUST be evaluated from top to bottom.
-- The first matching rule MUST win.
-- Exactly one default rule MUST exist.
-- The default rule MUST be the last rule.
-- The default rule MUST NOT contain persona or session target fields.
-- Non-default rules MAY be reordered by the user.
-- The default rule MUST NOT be draggable in the WebUI.
-- Session scope MUST use AstrBot's stable session_id as the target value.
-
-### 9.2 Supported scopes
-
-- persona
-- session
-- default
-
-### 9.3 Resolution algorithm
-
-When resolving the active pack for a request, the plugin MUST:
-
-1. Gather current runtime context, including persona name and session_id.
-2. Iterate rules from top to bottom.
-3. Return the first matching pack_id.
-4. Fall back to the default rule if no other rule matches.
-
-## 10. Official and Community Distribution
-
-### 10.1 Distribution principle
-
-Official packs and community packs MUST share the same install format.
-
-The only difference between them SHOULD be the review and trust process.
-
-### 10.2 Official source
-
-The official default meme pack SHOULD be distributed from a separate repository or a dedicated path in a separate repository.
-
-The plugin SHOULD download official packs through a maintained source descriptor rather than through hard-coded in-repo assets.
-
-### 10.3 Community source model
-
-Community packs SHOULD NOT be installed from arbitrary user-provided repositories by default.
-
-Instead, the plugin SHOULD consume a reviewed community index maintained by the plugin author.
-
-## 11. Community Index Format
-
-The reviewed community index SHOULD be published as JSON.
-
-Example:
-
-```json
-{
-  "schema_version": 1,
-  "generated_at": "2026-07-08T00:00:00Z",
-  "packs": [
-    {
-      "id": "official-basic",
-      "name": "Official Basic Meme Pack",
-      "maintainer": "anka",
-      "description": "Official maintained meme pack",
-      "verified": true,
-      "source": {
-        "type": "github",
-        "repo": "owner/repo",
-        "ref": "main",
-        "subpath": "packs/official-basic"
-      },
-      "previews": ["https://example.com/preview_1.png"],
-      "license": "SEE LICENSE IN REPOSITORY",
-      "tags": ["official", "default"]
-    }
-  ]
-}
-```
-
-### 11.1 Community entry requirements
-
-Each reviewed pack entry SHOULD include:
-
-1. id
-2. name
-3. maintainer
-4. description
-5. source descriptor
-6. at least one preview reference
-7. license information
-8. verified state
-
-## 12. Community Governance Rules
-
-To reduce legal and operational risk, the following rules SHOULD apply to community listings:
-
-1. Each submitted repository MUST include a valid manifest.json.
-2. Each submitted repository MUST include preview material.
-3. Each submitted repository MUST include a description.
-4. Each submitted repository SHOULD declare license information.
-5. Illegal, infringing, hateful, violent, explicit, or otherwise unsafe material MUST be rejected.
-6. The maintainer MAY remove any pack from the reviewed index at any time.
-7. The plugin SHOULD only display reviewed community entries by default.
-
-## 13. Backup and Restore Format
-
-### 13.1 Backup transport format
-
-Backup export MUST use a zip archive.
-
-The default backup output directory SHOULD be:
+`entry_id` MUST be the lowercase hexadecimal SHA-256 digest of the UTF-8 encoding of:
 
 ```text
-<astrbot_plugin_data>/meme_manager/backup/
+content_sha256 + NUL + category + NUL + relative_path
 ```
 
-The user MAY choose a custom export path in the WebUI.
+`NUL` is one zero byte. The formula uses the exact stored category and relative path. Identical bytes at different paths or in different categories therefore have different entry IDs.
 
-### 13.2 Backup archive contents
+The content hash MUST match the referenced file. The record key, `entry_id`, and computed entry ID MUST agree. The resolved image path MUST remain within the pack's `memes/` directory, including after resolving symbolic links. Changes to the image bytes, category, or relative path require the corresponding identity fields and record key to be updated.
 
-Each exported zip SHOULD contain:
+A complete fixture with a real image, matching hashes, and validation instructions is available in [examples/semantic](examples/semantic/README.md).
 
-```text
-manifest.json
-memes/
-previews/
-```
+### 6.4 Portable content
 
-This means a backup archive is the same logical unit as an installable pack.
+Descriptions MAY be written by people or generated by models; the format requires neither a model service nor a vector index. Publicly distributed metadata MUST NOT contain credentials, private conversations, or private information.
 
-### 13.3 Restore rules
+The semantic schema accepts additional properties for compatibility with existing files. Such properties do not establish portable semantics. Local provider identifiers, processing progress, and vector state are not required pack content. Applications may use the base pack without supporting semantic descriptions.
 
-On restore, the plugin MUST:
+## 7. Distribution boundaries
 
-1. Validate the archive structure.
-2. Validate manifest.json.
-3. Reject path traversal entries.
-4. Reject unsupported or dangerous files.
-5. Detect conflicts by pack id.
-6. Support overwrite or side-by-side restore policy.
+A pack MAY be distributed as a directory, a repository subtree, or files in an archive. Its portable content is the pack root and its contents defined above. Repository or archive wrapper directory names are not pack identifiers.
 
-### 13.4 Conflict policy
+If an archive carries a pack, its entries MUST NOT resolve outside the extraction root. This specification does not define an archive container version, require a particular compression format, or specify application backup and restore behavior.
 
-The implementation SHOULD support at least one of the following restore policies:
+Publication, community admission, licensing review, and installation are separate from conformance to this data format. Community requirements are maintained in the [README](README.md#社区索引格式与收录要求).
 
-1. Replace existing pack when pack id matches and user confirms.
-2. Install as a new pack only when the pack id is unique.
+## 8. Conformance
 
-Silent overwrite MUST NOT happen.
+Base-pack validation consists of the following checks:
 
-## 14. Download and Install Rules
+1. The pack root contains a readable UTF-8 JSON `manifest.json` and a `memes/` directory.
+2. The manifest satisfies the manifest schema, including required fields and category descriptions.
+3. Meme assets follow `memes/<category>/<image>`, with category names matching the manifest.
+4. Referenced icons and previews exist, and image resources and paths satisfy section 5.
 
-When installing a pack from a repository or reviewed index, the plugin MUST:
+Semantic-extension validation additionally checks the declaration and file, schema version, pack ID, category membership, record keys, file existence, content hashes, and entry IDs as defined in section 6. JSON Schema validation alone does not check these file relationships or hashes.
 
-1. Download into temp/ first.
-2. Validate manifest.json before activation.
-3. Validate directory structure before activation.
-4. Move the validated pack into packs/<pack_id>/.
-5. Update registry.json only after successful install.
+Absence of semantic metadata or descriptions for individual images MUST NOT invalidate a base pack. A malformed supplied semantic file does not conform to the extension and MUST NOT be reported as valid semantic metadata. Base-pack and extension conformance are separate results; an application may reject an entire distribution for unsafe paths or other security failures.
 
-Partially installed packs MUST NOT be marked as installed.
-
-## 15. Prompt and Runtime Behavior
-
-The plugin currently constructs prompt content from global category descriptions.
-
-After this protocol is implemented, the runtime MUST instead:
-
-1. Resolve the active pack from selection rules.
-2. Load category descriptions from the resolved pack manifest.
-3. Build prompt fragments from the resolved pack categories.
-4. Resolve meme assets only inside the resolved pack.
-
-This requirement removes the old single global descriptions assumption.
-
-## 16. WebUI Requirements
-
-The WebUI SHOULD expose multiple plugin pages:
-
-1. manage
-2. catalog
-3. settings
-
-The WebUI SHOULD also provide visible navigation buttons or links between these pages.
-
-### 16.1 manage page
-
-The manage page is responsible for installed pack content management, including category and asset operations.
-
-### 16.2 catalog page
-
-The catalog page is responsible for:
-
-1. Showing the official meme pack prominently.
-2. Showing reviewed community packs below the official section.
-3. Providing download and install actions.
-
-### 16.3 settings page
-
-The settings page is responsible for:
-
-1. Ordered persona and session selection rules.
-2. Fixed default rule at the bottom.
-3. Backup export.
-4. Backup import and restore.
-
-## 17. Migration Requirements
-
-### 17.1 Migration trigger
-
-If the plugin detects old-format data and no new-format registry, it MUST run a one-time migration.
-
-### 17.2 Old format inputs
-
-The old format consists primarily of:
-
-1. A single memes directory.
-2. A single global category description file.
-
-### 17.3 Migration target
-
-The migration MUST create one installed pack from the old user data.
-
-Recommended migrated pack id:
-
-```text
-legacy-migrated
-```
-
-### 17.4 Migration steps
-
-The migration flow SHOULD be:
-
-1. Detect old runtime data.
-2. Create packs/legacy-migrated/.
-3. Move or copy old meme assets into packs/legacy-migrated/memes/.
-4. Convert old category descriptions into manifest.json categories.
-5. Create registry.json.
-6. Create selection_rules.json with a default rule pointing to legacy-migrated.
-7. Persist a migration marker to avoid duplicate migration.
-
-### 17.5 Migration safety
-
-The migration SHOULD preserve enough intermediate state to recover from failure.
-
-The migration MUST NOT silently delete user data before the new format is valid.
-
-## 18. Backward Compatibility Policy
-
-The plugin SHOULD keep a compatibility layer during the transition period.
-
-This compatibility layer MAY:
-
-1. Read old-format data during migration.
-2. Expose old command behavior while redirecting storage to the new pack model.
-3. Keep legacy APIs working until the new WebUI is fully available.
-
-## 19. Validation Rules
-
-An installable pack MUST fail validation if any of the following are true:
-
-1. manifest.json is missing.
-2. id is missing.
-3. name is missing.
-4. version is missing.
-5. categories is missing or empty.
-6. memes/ is missing.
-7. The directory name does not match manifest id.
-8. The archive contains path traversal content.
-9. The pack contains unsupported dangerous files.
-
-## 20. Summary
-
-This draft defines one unified model:
-
-1. One installable meme pack format.
-2. One zip backup format aligned with that pack format.
-3. One reviewed community index format.
-4. One ordered rule system for persona, session, and default selection.
-5. One migration path from the old single-directory model to the new pack model.
+Conformance does not depend on an installed directory name, local configuration, an application's interfaces or algorithms, or acceptance into a community index.
