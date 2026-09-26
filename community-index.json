@@ -26,19 +26,19 @@
     {
       "id": "seio-stickers",
       "name": "AstrBot娘表情包",
-      "version": "2026.08.2",
+      "version": "2026.09.0",
       "maintainer": "anka-afk",
-      "description": "收录 188 个 AstrBot娘动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
+      "description": "收录 208 个 AstrBot娘动态表情，按 15 个聊天语义类别整理，适合日常对话、情绪表达与互动场景。",
       "license": "仅限非商业使用；允许下载、分享与分发",
       "verified": true,
       "tags": ["official", "seio", "animated", "gif", "non-commercial"],
       "previews": [
-        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.08.2/previews/cover.jpg"
+        "https://raw.githubusercontent.com/anka-afk/seio-stickers/v2026.09.0/previews/cover.jpg"
       ],
       "source": {
         "type": "github",
         "repo": "anka-afk/seio-stickers",
-        "ref": "v2026.08.2",
+        "ref": "v2026.09.0",
         "subpath": "."
       }
     },
