@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-10-25T04:35:08Z",
+  "generated_at": "2026-10-25T18:31:54Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -253,6 +253,32 @@
       "source": {
         "type": "github",
         "repo": "just1cez/emilia-meme-pack",
+        "ref": "main",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "steins-gate-0",
+      "name": "命运石之门0",
+      "maintainer": "Shennoter",
+      "description": "命运石之门0的角色在聊天工具Rine里用到的表情包。汉化作者为幸运的兔脚。",
+      "license": "CC-BY-NC-SA-4.0",
+      "verified": false,
+      "tags": [
+        "community",
+        "steins-gate-0",
+        "Rine",
+        "anime",
+        "汉化",
+        "聊天表情"
+      ],
+      "previews": [
+        "https://raw.githubusercontent.com/Shennoter/astrbot-meme-pack-steins-gate-0/main/previews/cover.png",
+        "https://raw.githubusercontent.com/Shennoter/astrbot-meme-pack-steins-gate-0/main/previews/all.png"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "Shennoter/astrbot-meme-pack-steins-gate-0",
         "ref": "main",
         "subpath": "."
       }
