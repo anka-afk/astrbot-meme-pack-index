@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-10-25T18:31:54Z",
+  "generated_at": "2026-11-03T04:22:43Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -280,6 +280,33 @@
         "type": "github",
         "repo": "Shennoter/astrbot-meme-pack-steins-gate-0",
         "ref": "main",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "marisa-meme-pack",
+      "name": "魔理沙表情包",
+      "maintainer": "Turino",
+      "description": "收录 165 张魔理沙 Q 版动态表情（500×500 GIF），由 lightbulb128 约稿自 EmoteLab，按 22 个聊天语义类别整理，适合日常对话、吐槽玩梗与情绪表达。",
+      "license": "仅限非商业使用；允许下载、分享与分发；素材版权归原作者，详见仓库 LICENSE",
+      "verified": false,
+      "tags": [
+        "community",
+        "touhou",
+        "marisa",
+        "chibi",
+        "animated",
+        "gif",
+        "meme-pack"
+      ],
+      "previews": [
+        "https://raw.githubusercontent.com/liquidtoy001/astrbot-meme-pack-marisa/v1.0.0/previews/cover.jpg",
+        "https://raw.githubusercontent.com/liquidtoy001/astrbot-meme-pack-marisa/v1.0.0/previews/overview.jpg"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "liquidtoy001/astrbot-meme-pack-marisa",
+        "ref": "v1.0.0",
         "subpath": "."
       }
     }
