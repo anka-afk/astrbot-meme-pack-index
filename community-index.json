@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-11-06T17:32:00Z",
+  "generated_at": "2026-11-06T18:43:37Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -314,24 +314,24 @@
       "id": "chinesebqb-astrbot",
       "name": "ChineseBQB 中文表情包合集",
       "maintainer": "DumKing",
-      "description": "整理自 zhaoolee/ChineseBQB 的 5,770 张静态与动态表情，保留 115 个原始系列分类，分类内去重。全部图片及封面均来自固定上游快照，仓库主页显著注明来源；未逐图生成语义描述。",
-      "license": "原素材未提供统一许可证；版权归各权利人。来源与授权说明：https://github.com/DumKing/ChineseBQB-AstrBot/blob/v1.0.1/RIGHTS.md",
+      "description": "整理自 zhaoolee/ChineseBQB，按图片内容分为 28 个情绪/用途分类，收录 5,173 张去重图片，附逐图中文描述与可选语义元数据，不分发本机向量。全量识别后，含义不明、无法完整解码或被标记不宜分发的图片未纳入。",
+      "license": "原素材未提供统一许可证；版权归各权利人。来源与授权说明：https://github.com/DumKing/ChineseBQB-AstrBot/blob/v1.1.0/RIGHTS.md",
       "verified": false,
       "tags": [
         "community",
         "chinese",
         "chinesebqb",
-        "collection",
+        "semantic",
         "animated",
         "static"
       ],
       "previews": [
-        "https://raw.githubusercontent.com/DumKing/ChineseBQB-AstrBot/v1.0.1/previews/cover.jpg"
+        "https://raw.githubusercontent.com/DumKing/ChineseBQB-AstrBot/v1.1.0/previews/cover.jpg"
       ],
       "source": {
         "type": "github",
         "repo": "DumKing/ChineseBQB-AstrBot",
-        "ref": "v1.0.1",
+        "ref": "v1.1.0",
         "subpath": "."
       }
     }
