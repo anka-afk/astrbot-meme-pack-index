@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-11-03T04:22:43Z",
+  "generated_at": "2026-11-07T02:39:21Z",
   "maintainer": "anka-afk",
   "repository": "anka-afk/astrbot-meme-pack-index",
   "packs": [
@@ -307,6 +307,31 @@
         "type": "github",
         "repo": "liquidtoy001/astrbot-meme-pack-marisa",
         "ref": "v1.0.0",
+        "subpath": "."
+      }
+    },
+    {
+      "id": "izumi-hiyori-meme-pack",
+      "name": "和泉妃爱表情包",
+      "maintainer": "NooAcc",
+      "description": "收录 99 张和泉妃爱（Izumi Hiyori）聊天表情，按 18 个语义类别整理，并附带 99 条路径级语义描述（不含向量，安装后可自行重建）。",
+      "license": "CC-BY-NC-SA-4.0（署名、非商业性使用、相同方式共享）；素材版权归原作者，详见仓库 LICENSE",
+      "verified": false,
+      "tags": [
+        "community",
+        "izumi-hiyori",
+        "anime",
+        "static",
+        "zh-cn",
+        "semantic"
+      ],
+      "previews": [
+        "https://raw.githubusercontent.com/NooAcc/astrbot-meme-IzumiHiyori/v1.0.2/previews/cover.png"
+      ],
+      "source": {
+        "type": "github",
+        "repo": "NooAcc/astrbot-meme-IzumiHiyori",
+        "ref": "v1.0.2",
         "subpath": "."
       }
     }
